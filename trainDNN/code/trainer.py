@@ -18,7 +18,8 @@ class Trainer():
             "state": None,
             "epoch": 0
         }
-
+        
+        # Train Loss 계산
         for epoch in range(self.trainer_config["EPOCHS"]):
             self.model.train()
             epoch_loss = 0.0
@@ -31,7 +32,8 @@ class Trainer():
             0%|          | 0/100 [00:00<?, ?it/s] 이런 식으로
             '''
             with tqdm(self.train_loader, desc=f"Epoch {epoch + 1}/{self.trainer_config['EPOCHS']}", unit="batch") as t:
-                for batch in t:
+                for batch in t: # 배치 단위로 train_data를 train_loader로 로드
+                    # print(f"Batch['input']의 사이즈 : {batch['input'].shape}") # [32, 10080, 1] = [bs, window, feature수]
                     inputs = batch["input"].to(self.trainer_config["DEVICE"])
                     original_hidden, reconstructed_hidden = self.model(inputs) # [ Batch_size, HIDDEN_DIM_LSTM ]
 
@@ -39,18 +41,15 @@ class Trainer():
 
                     self.optimizer.zero_grad()
                     loss.backward()
-                    self.optimizer.step()
+                    self.optimizer.step() # 파라미터 
 
                     epoch_loss += loss.item()
                     t.set_postfix(loss=loss.item())
-                    # epoch_loss += loss.item()*input.size(0)
-                    # t.set_postfix(loss=loss.item()*input.size(0))
+                    # break
 
-            # avg_train_loss = epoch_loss / len(self.train_loader)
             avg_train_loss = epoch_loss / len(self.train_loader.dataset)
             train_losses.append(avg_train_loss)
 
-            # print(f"Epoch {epoch + 1}/{self.trainer_config['EPOCHS']}, Average Train Loss: {avg_epoch_loss:.8f}")
             self.model.eval()
             epoch_val_loss = 0.0
             with torch.no_grad():
@@ -62,10 +61,8 @@ class Trainer():
                         loss = self.criterion(reconstructed_hidden, original_hidden)
                         epoch_val_loss += loss.item()
                         t.set_postfix(loss=loss.item())
-                        # epoch_val_loss += loss.item()*input.size(0)
-                        # t.set_postfix(loss=loss.item()*input.size(0))
+                        # break
 
-            # avg_val_loss = epoch_val_loss / len(self.val_loader)
             avg_val_loss = epoch_val_loss / len(self.val_loader.dataset)
             val_losses.append(avg_val_loss)
 
@@ -80,10 +77,3 @@ class Trainer():
                 best_model["epoch"] = epoch + 1
 
         return train_losses, val_losses, best_model
-            
-        #     if avg_epoch_loss < best_model["loss"]:
-        #         best_model["state"] = self.model.state_dict()
-        #         best_model["loss"] = avg_epoch_loss
-        #         best_model["epoch"] = epoch + 1
-
-        # return train_losses, best_model

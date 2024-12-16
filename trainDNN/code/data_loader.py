@@ -13,7 +13,7 @@ class DataLoader(Dataset):
         self.df = df
         
         self.column_names = self.df.filter(regex='^P\\d+$').columns.tolist() # P1, P2.. 꼴의 컬럼만 추출 (P1_flag 이런건 제외)
-        self.file_ids = self.df['file_id'].values if 'file_id' in df.columns else None # test 데이터의 경우
+        self.file_ids = self.df['file_id'].values if 'file_id' in df.columns else None # test 데이터의 경우 (추론 모드에서만)
         
         if inference: # test일 경우, (단일 시퀀스 데이터로) 테스트 데이터 준비시키기
             self._prepare_inference_data()

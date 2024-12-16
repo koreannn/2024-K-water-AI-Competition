@@ -1,8 +1,8 @@
-WINDOW_GIVEN      : 5040   # 1 week 
+WINDOW_GIVEN      : 10080   # 1 week 
 BATCH_SIZE        : 32
-HIDDEN_DIM_LSTM   : 1024
+HIDDEN_DIM_LSTM   : 512
 NUM_LAYERS        : 1
-EPOCHS            : 3
+EPOCHS            : 1
 LEARNING_RATE     : 1.0e-3
 DEVICE            : "cuda"
 DROPOUT           : 0.2
@@ -20,4 +20,4 @@ submission_template:
 
 output_path:
   output_dir: "../data/submission"
-  output_file_name_format: "{CURRENT_TIME}_bs{BATCH_SIZE}_epochs{EPOCHS}_lr{LEARNING_RATE}.csv"
+  # output_file_name_format: "{CURRENT_TIME}_bs{BATCH_SIZE}_epochs{EPOCHS}_lr{LEARNING_RATE}.csv"

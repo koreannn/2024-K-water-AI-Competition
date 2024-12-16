@@ -10,7 +10,7 @@ class SetThreshold():
         self.inference_model = inference_model
         self.train_loader = train_loader
         
-    def calculate_and_save_threshold(self, percentile=98): # 상위 2퍼센트의 에러값을 임계값으로 설정
+    def calculate_and_save_threshold(self, percentile=99): # 상위 2퍼센트의 에러값을 임계값으로 설정
         self.inference_model.eval() # 평가 모드로 전환 (Dropout, BatchNorm 등의 학습 관련 동작들을 모두 정지시킴)
         train_errors = []
         with torch.no_grad():
